@@ -18,11 +18,6 @@
       var destination = $("#destination").val().trim();
       var firstTrain = $("#firstTrain").val().trim();
       var frequency = $("#frequency").val().trim();
-      // var timeLeft = $("timeLeft").val("?");
-      console.log(trainName);
-      console.log(destination);
-      console.log(firstTrain);
-      console.log(frequency);
       //Updates data to firebase storage
       database.ref().push({
           name: trainName,
@@ -31,47 +26,49 @@
           frequency: frequency
         });
         
-        alert("Train successfully added");
+        // alert("Train successfully added");
         
-        // Clears all of the text-boxes
+        // Empties input 
         $("#trainName").val("");
         $("#destination").val("");
         $("#firstTrain").val("");
         $("#frequency").val("");
-                
-    
     });
-    // var timeLeft = $("timeLeft").text("?");
-    
+    //pulls refrence from firebase to child     
     database.ref().on("child_added", function(childSnapspot){
-        console.log(childSnapspot.key);
+        // console.log(childSnapspot.key);
         console.log(childSnapspot.val());
-        
+        // creates new variables to hold value data 
         var trainName = childSnapspot.val().name;
         var destination = childSnapspot.val().destination;
         var firstTrain = childSnapspot.val().firstTrain;
         var frequency = childSnapspot.val().frequency;
-       
+        // variable to hold time of arrival
+        var minutesPassed;
+        // varible to hold time till train arrives
         var timeOfArrival;
-        var timeOfMinutesPasssed;
-
-        var trainTime= moment(firstTrain,"hh:mm").subtract(1,"day");
-        
-        console.log(trainName);
-        console.log(destination);
-        console.log(firstTrain);
-        console.log(frequency);
-        
-        // create new row
+        // Train time using moment() function w/ input data from user 
+        // and brings it back 1 day, so it doesn't affect future time
+        var trainTime= moment(firstTrain,"HH:mm").subtract(1,"day");
+        console.log(trainTime);
+        //getting the difference in minutes 
+        var differenceInMins = moment().diff(moment(trainTime), "minutes");
+        //variable to hold difference in mins
+        var difference = differenceInMins % frequency;
+        //time of next train arrival
+        minutesPassed = frequency - difference;
+        //records the minutes passed to the current time to give next train coming up time
+        var trainToFollow = moment().add(minutesPassed, "minutes");
+        timeOfArrival = moment(trainToFollow).format("ddd HH:mm A");
+      
+        // create new row 
         var newRow = $("<tr>").append(
             $("<td>").text(trainName),
             $("<td>").text(destination),
-            $("<td>").text(firstTrain),
             $("<td>").text(frequency),
-            $("<td>").text("?")
-            
-            
-            );
+            $("<td>").text(timeOfArrival), 
+            $("<td>").text(minutesPassed)
+           );
             
             $("#train-table > tbody").append(newRow); 
         });

@@ -4,3 +4,6 @@
 input{
     width:100%;
 }
+body {
+    background-image: url(../images/train-clock-padd.jpg);
+}
