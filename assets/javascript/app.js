@@ -10,6 +10,7 @@
   //varible to hold data from firebase
   var database = firebase.database();
   
+  
   //submit button for train form 
   $("#addTrainBtn").on("click", function (event) {
       event.preventDefault();
@@ -18,36 +19,26 @@
       var destination = $("#destination").val().trim();
       var firstTrain = $("#firstTrain").val().trim();
       var frequency = $("#frequency").val().trim();
+     
+      if (trainName == "" || destination == "" || firstTrain =="" || frequency == ""){
+         uploadFailure();
+      } else {
+        uploadSuccess();
       //Updates data to firebase storage
       database.ref().push({
           name: trainName,
           destination: destination,
           firstTrain: firstTrain,
           frequency: frequency
-        });
-        
-          addTrainBtn.onclick = function() {
-            modal.style.display = "block";
-          }
-          
-          // When the user clicks on <span> (x), close the modal
-          span.onclick = function() {
-            modal.style.display = "none";
-          }
-          
-          // When the user clicks anywhere outside of the modal, close it
-          window.onclick = function(event) {
-            if (event.target == modal) {
-              modal.style.display = "none";
-            }
-          }
+        });    
         
         // Empties input 
         $("#trainName").val("");
         $("#destination").val("");
         $("#firstTrain").val("");
         $("#frequency").val("");
-    });
+    } 
+  });
     //pulls refrence from firebase to child     
     database.ref().on("child_added", function(childSnapspot){
         // console.log(childSnapspot.key);
@@ -74,7 +65,6 @@
         //records the minutes passed to the current time to give next train coming up time
         var trainToFollow = moment().add(minutesPassed, "minutes");
         timeOfArrival = moment(trainToFollow).format("ddd HH:mm A");
-      
         // create new row 
         var newRow = $("<tr>").append(
           $("<td>").text(trainName),
@@ -83,14 +73,53 @@
             $("<td>").text(timeOfArrival), 
             $("<td>").text(minutesPassed)
            );
-            
+            // Appends new row from child 
             $("#train-table > tbody").append(newRow); 
         });
-        
 
-// Get the modal
-var modal = document.getElementById('myModal');
-// Get the <span> element that closes the modal
-var span = document.getElementsByClassName("close")[0];
 
-// When the user clicks on the button, open the modal 
+  // Get the modal
+  var modal = document.getElementById('myModalSuccess');
+  var modal2 = document.getElementById('myModalFailure');
+  // Get the <span> element that closes the modal
+  var closeBtn = document.getElementById("btnExit");
+
+  var modalBtn = document.getElementById("addTrainBtn");
+  // document.getElementById()
+
+  function uploadSuccess() {
+        modal.style.display = "block";
+        }  
+  function uploadFailure() {
+          modal2.style.display = "block";
+          } 
+  function closeModal (){
+          modal.style.display = "none";
+   }       
+         
+      model2.addEventListener("mouseover", closeModal);
+            // modal.style.display = "none";
+         
+
+ // When the user clicks anywhere outside of the modal, close it
+          // window.onclick = function(event) {
+          //   if (event.target == modal) {
+          //     modal.style.display = "none";
+          //   }
+          // }
+  
+        // closeBtn.onclick = function(){
+        //   closeModal();
+        // };
+      
+
+addTrainBtn.onclick = function() {
+            modal.style.display = "block";
+          }
+
+         
+// closeBtn.onclick = function(){
+//     modal.style.display = "none";
+// }
+          // When the user clicks on <span> (x), close the modal
+          
