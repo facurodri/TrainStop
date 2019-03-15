@@ -1,19 +1,47 @@
-  // Initialize Firebase
-  var config = {
-    apiKey: "AIzaSyBTKUqIZhhM9uW-41wg1wI_iyccbI2pNf8",
-    authDomain: "trainstop-c292f.firebaseapp.com",
-    databaseURL: "https://trainstop-c292f.firebaseio.com",
-    storageBucket: "trainstop-c292f.appspot.com"    
-  };
-  //firebase use
-  firebase.initializeApp(config);
-  //varible to hold data from firebase
-  var database = firebase.database();
-  
+// Initialize Firebase
+var config = {
+  apiKey: "AIzaSyBTKUqIZhhM9uW-41wg1wI_iyccbI2pNf8",
+  authDomain: "trainstop-c292f.firebaseapp.com",
+  databaseURL: "https://trainstop-c292f.firebaseio.com",
+  storageBucket: "trainstop-c292f.appspot.com"    
+};
+//firebase use
+firebase.initializeApp(config);
+//varible to hold data from firebase
+var database = firebase.database();
+
+var span = document.getElementsByClassName("close")[0];
+// Get the modal
+var modal = document.getElementById('myModalSuccess');
+var modal2 = document.getElementById('myModalFailure');
+var closeBtn = document.getElementsByClassName("closeBtn");
+
+function uploadSuccess() {
+      modal.style.display = "block";
+      };
+function closeModal (){
+        modal.style.display = "none";
+ }           
+ function uploadFailure() {
+         modal2.style.display = "block";
+       } 
+  closeBtn.onclick = function(){
+      modal.style.display = "none";
+  }
+  span.onclick = function() {
+    modal.style.display = "none";
+  }
+  // // When the user clicks anywhere outside of the modal, close it
+  // window.onclick = function(event) {
+  //   if (event.target == modal) {
+  //     modal.style.display = "none";
+  //   }
+  // }
   
   //submit button for train form 
   $("#addTrainBtn").on("click", function (event) {
       event.preventDefault();
+      
       //creates varibles to hold inputs 
       var trainName = $("#trainName").val().trim();
       var destination = $("#destination").val().trim();
@@ -21,9 +49,14 @@
       var frequency = $("#frequency").val().trim();
      
       if (trainName == "" || destination == "" || firstTrain =="" || frequency == ""){
-         uploadFailure();
+        console.log("failed update"); 
+        uploadFailure();
+        closeBtn.onclick = function(){
+        modal.style.display = "none";
+      }
       } else {
-        uploadSuccess();
+         uploadSuccess();
+
       //Updates data to firebase storage
       database.ref().push({
           name: trainName,
@@ -77,49 +110,15 @@
             $("#train-table > tbody").append(newRow); 
         });
 
-
-  // Get the modal
-  var modal = document.getElementById('myModalSuccess');
-  var modal2 = document.getElementById('myModalFailure');
   // Get the <span> element that closes the modal
-  var closeBtn = document.getElementById("btnExit");
 
   var modalBtn = document.getElementById("addTrainBtn");
-  // document.getElementById()
-
-  function uploadSuccess() {
-        modal.style.display = "block";
-        }  
-  function uploadFailure() {
-          modal2.style.display = "block";
-          } 
-  function closeModal (){
-          modal.style.display = "none";
-   }       
-         
-      model2.addEventListener("mouseover", closeModal);
-            // modal.style.display = "none";
-         
-
- // When the user clicks anywhere outside of the modal, close it
-          // window.onclick = function(event) {
-          //   if (event.target == modal) {
-          //     modal.style.display = "none";
-          //   }
-          // }
   
-        // closeBtn.onclick = function(){
-        //   closeModal();
-        // };
-      
 
-addTrainBtn.onclick = function() {
-            modal.style.display = "block";
-          }
+// addTrainBtn.onclick = function() {
+//             modal.style.display = "none";
+//           }
 
          
-// closeBtn.onclick = function(){
-//     modal.style.display = "none";
-// }
           // When the user clicks on <span> (x), close the modal
           
