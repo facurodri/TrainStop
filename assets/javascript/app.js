@@ -9,45 +9,33 @@ var config = {
 firebase.initializeApp(config);
 //varible to hold data from firebase
 var database = firebase.database();
-
-var span = document.getElementsByClassName("close")[0];
 // Get the modal
 var modal = document.getElementById('myModalSuccess');
 var modal2 = document.getElementById('myModalFailure');
 var closeBtn = document.getElementsByClassName("closeBtn");
-
+//modal for success window
 function uploadSuccess() {
+    console.log("success modal");
       modal.style.display = "block";
-      };
-function closeModal (){
-        modal.style.display = "none";
- }           
+      };   
+      //modal for failure window       
  function uploadFailure() {
          modal2.style.display = "block";
-       } 
-  closeBtn.onclick = function(){
+       };
+       // closes modal button
+  $(".closeBtn").on("click", function(){
       modal.style.display = "none";
-  }
-  span.onclick = function() {
-    modal.style.display = "none";
-  }
-  // // When the user clicks anywhere outside of the modal, close it
-  // window.onclick = function(event) {
-  //   if (event.target == modal) {
-  //     modal.style.display = "none";
-  //   }
-  // }
-  
+      modal2.style.display = "none";
+  });
   //submit button for train form 
   $("#addTrainBtn").on("click", function (event) {
       event.preventDefault();
-      
       //creates varibles to hold inputs 
       var trainName = $("#trainName").val().trim();
       var destination = $("#destination").val().trim();
       var firstTrain = $("#firstTrain").val().trim();
       var frequency = $("#frequency").val().trim();
-     
+     //checks form to see if all inputs are filled
       if (trainName == "" || destination == "" || firstTrain =="" || frequency == ""){
         console.log("failed update"); 
         uploadFailure();
@@ -56,7 +44,6 @@ function closeModal (){
       }
       } else {
          uploadSuccess();
-
       //Updates data to firebase storage
       database.ref().push({
           name: trainName,
@@ -64,7 +51,6 @@ function closeModal (){
           firstTrain: firstTrain,
           frequency: frequency
         });    
-        
         // Empties input 
         $("#trainName").val("");
         $("#destination").val("");
@@ -108,17 +94,4 @@ function closeModal (){
            );
             // Appends new row from child 
             $("#train-table > tbody").append(newRow); 
-        });
-
-  // Get the <span> element that closes the modal
-
-  var modalBtn = document.getElementById("addTrainBtn");
-  
-
-// addTrainBtn.onclick = function() {
-//             modal.style.display = "none";
-//           }
-
-         
-          // When the user clicks on <span> (x), close the modal
-          
+        }); 
